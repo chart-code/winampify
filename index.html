@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>winamp media</title>
+    <link rel = "stylesheet" type = "text/css"href = "./style.css" />
+</head>
+<body>
+    <h1>Is this Winamp yet?</h1>
+    <h2>Damn <code>it isn't yet</code></h2>
+    <div>
+        <h3>Username: </h3>
+        <p id="username"></p>
+    </div>
+    <div>
+        <h4>Song Playing: </h4>
+        <p id="currentSong"></p>
+    </div>
+    <div>
+        <h4>Next Song: </h4>
+        <p id="nextSong"></p>
+    </div>
+    <h1>Controls?</h1>
+    <div>
+        <button id="pause"> || </button><button id="play"> > </button>
+    </div>
+    <div class="slidecontainer">
+        <p>Volume!</p>
+        <input type="range" min="1" max="100" value="100" class="slider" id="volume">
+    </div>
+
+    <div>
+        <button id="data"> Data </button>
+    </div>
+    
+
+
+    
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src="./runner.js"></script>
+
+
+</body>
+</html>
