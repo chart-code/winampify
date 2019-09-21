@@ -1,7 +1,7 @@
 var player;
 var next;
 window.onSpotifyWebPlaybackSDKReady = () => {
-    const token = 'BQBeMl36-ci_H_Zeu-5GgxC5DDVneAUjTYCelOTawvNFKO2r2Cqo7iap8J4IEnwLZH9kb06au5y__nptnk15mb24tkUSmu5EwkIFxe-XVNdu027LkOptvYbG6b_e58A2TVWECPLB57EG7vykxxmrv5a3GggMwXDylMWmHP0v';
+    const token = '';
     player = new Spotify.Player({
         name: 'WOW spotify api',
         getOAuthToken: cb => { cb(token); }
@@ -44,7 +44,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         url: "https://api.spotify.com/v1/me",
         dataType: 'json',
         headers: {
-            "Authorization": "Bearer BQBqCrZwPcWf2uN4rjwlhbmLF9anMNqatxyeABCObmMEQueX2TQuETZ-lgBsyAW5b8JKmO9jxu_Qfwx5taHBzDFiTAs0fzHUrNmqQUYKWVR2XuMZAgJlpz65qUbvl33bpWf-CX0Vyy8T87Gcm7BLWe9KR2Y2ta7xHASV0bouN1Uxx9XW19NXUtixlkeNFKMqcVQGJGcAsqbGFIRC5R2QW-QQ9-JNhndwDNOXMvrM_5XaKbz-neY2m8CoCf1vIf70HHMbpbag8xoSDknfszM"
+            "Authorization": ""
         },
         success: function (data, status){
             console.log(data); 
