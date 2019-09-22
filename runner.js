@@ -1,10 +1,10 @@
 var player;
 var next;
 window.onSpotifyWebPlaybackSDKReady = () => {
-    const token = '';
+    
     player = new Spotify.Player({
-        name: 'WOW spotify api',
-        getOAuthToken: cb => { cb(token); }
+        name: 'winamp',
+        getOAuthToken: cb => { cb(_token); }
     });
 
     // Error handling
@@ -28,6 +28,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // Ready
     player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
+        $.ajax({
+            type: "PUT",
+            url: "https://api.spotify.com/v1/me/player",
+            beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+            data:JSON.stringify({
+                device_ids:[player._options.id],
+                play: true
+            })
+        });
     });
 
     // Not Ready
@@ -42,15 +51,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     $.ajax({
         type: "GET",
         url: "https://api.spotify.com/v1/me",
-        dataType: 'json',
-        headers: {
-            "Authorization": ""
-        },
+        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
         success: function (data, status){
             console.log(data); 
             $('#username').text(data.id);
         }
     });
+    console.log(player._options.id)
+    
+    
 };
 
 

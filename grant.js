@@ -22,7 +22,16 @@ console.log(window.location.href)
 const clientId = '012948ea7d784e819590b1096b416b0d';
 const redirectUri = window.location.href;
 const scopes = [
-    'user-top-read'
+    'user-top-read',
+    'streaming',
+    'playlist-read-private',
+    'user-read-private',
+    'user-library-read',
+    'user-follow-read',
+    'user-follow-modify',
+    'user-top-read',
+    'user-modify-playback-state'
+
 ];
 
 // If there is no token, redirect to Spotify authorization
