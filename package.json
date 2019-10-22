@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "indian-ocean": "^4.0.0",
+    "readline-sync": "^1.4.10",
     "spotify-web-api-node": "^4.0.0"
   }
 }
