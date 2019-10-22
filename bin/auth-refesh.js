@@ -1,46 +1,54 @@
-// https://github.com/thelinmichael/spotify-web-api-node#authorization
-
 var SpotifyWebApi = require('spotify-web-api-node')
 var io = require('indian-ocean')
 
 var credentials = io.readDataSync(__dirname + '/credentials.json')
-
-var spotifyApi = new SpotifyWebApi(credentials)
-
-// // Retrieve an access token and a refresh token
-// spotifyApi.authorizationCodeGrant(credentials.code).then(
-//   function(data) {
-//     console.log('The token expires in ' + data.body['expires_in'])
-//     console.log('The access token is ' + data.body['access_token'])
-//     console.log('The refresh token is ' + data.body['refresh_token'])
-
-//     // Set the access token on the API object to use it in later calls
-//     spotifyApi.setAccessToken(data.body['access_token'])
-//     spotifyApi.setRefreshToken(data.body['refresh_token'])
-//   },
-//   function(err) {
-//     console.log('Something went wrong!', err)
-//   }
-// )
-
-spotifyApi.refreshAccessToken().then(
-  function(data) {
-    console.log('The access token has been refreshed!');
-
-    // Save the access token so that it's used in future calls
-    spotifyApi.setAccessToken(data.body['access_token']);
-  },
-  function(err) {
-    console.log('Could not refresh access token', err);
-  }
-);
+var sp = new SpotifyWebApi(credentials)
 
 
+async function init(){
+  var refreshData = await sp.refreshAccessToken()
+  sp.setAccessToken(refreshData.body['access_token'])
+
+  var meData = (await sp.getMe()).body
+  // console.log(meData)
+
+  // var limit = 50
+  // var offset = 0
+  // var savedTracks = await sp.getMySavedTracks({limit, offset})
+  // console.log(savedTracks.body.items)
+
+  // console.log(savedTracks.body.items[0])
+  // console.log(savedTracks.body.items[0].track)
+
+  var allPages = await getAllPages(sp.getMySavedTracks)
+  console.log(allPages.length)
+}
 
 
-spotifyApi.getMe()
-  .then(function(data) {
-    console.log('Some information about the authenticated user', data.body);
-  }, function(err) {
-    console.log('Something went wrong!', err);
-  });
+async function getAllPages(fn, id){
+  var pages = []
+  var opts = {offset: 0, limit: 50}
+
+  do{
+    var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
+
+    pages = pages.concat(lastPage.items)
+    opts.offset += opts.limit
+  } while (lastPage.next)
+
+  return pages
+}
+
+
+
+
+init()
+
+
+
+
+
+
+
+
+
