@@ -14,14 +14,27 @@ async function init(){
 
   // var limit = 50
   // var offset = 0
-  // var savedTracks = await sp.getMySavedTracks({limit, offset})
-  // console.log(savedTracks.body.items)
+  var savedTracks = await sp.getMySavedTracks()
+  var artistId = savedTracks.body.items[0].track.artists[0].id
+  console.log({artistId})
 
-  // console.log(savedTracks.body.items[0])
-  // console.log(savedTracks.body.items[0].track)
+  var albums = await sp.getArtistAlbums(artistId)
+  // console.log(albums.body.items)
+  var albumId = albums.body.items[0].id
+  console.log({albumId})
 
-  var allPages = await getAllPages(sp.getMySavedTracks)
-  console.log(allPages.length)
+  var album = await sp.getAlbumTracks(albumId)
+  console.log(album.body)
+
+
+  // fmt
+  // artist, album, albumID, album date, song title, song ID
+  // 
+
+
+
+  // var allPages = await getAllPages(sp.getMySavedTracks)
+  // console.log(allPages.length)
 }
 
 
