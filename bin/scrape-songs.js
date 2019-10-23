@@ -19,28 +19,34 @@ async function init(){
 }
 
 async function generateTidy(){
-  var tidy = []
+  try {
+    var tidy = []
 
-  var artists = (await dlAll(sp.getMySavedTracks))
-    .map(d => d.track.artists[0])
-    .map(d => ({artist: d.name, artistId: d.id}))
+    var artists = (await dlAll(sp.getMySavedTracks))
+      .map(d => d.track.artists[0])
+      .map(d => ({artist: d.name, artistId: d.id}))
 
-  var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
-    // .slice(0, 4)
+    var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
+      // .slice(0, 4)
 
-  for ({artist, artistId} of uniqueArtists){
-    console.log(artist)
-    var albums = (await dlAll(sp.getArtistAlbums, artistId))
-      .map(d => ({album: d.name, date: d.release_date, albumId: d.id}))
-    
-    for ({album, albumId, date} of albums){
-      var songs = (await dlAll(sp.getAlbumTracks, albumId))
-        .map(d => ({song: d.name, songId: d.id}))
+    for ({artist, artistId} of uniqueArtists){
+      console.log(artist)
+      var albums = (await dlAll(sp.getArtistAlbums, artistId))
+        .map(d => ({album: d.name, date: d.release_date, albumId: d.id}))
       
-      songs.forEach(({song, songId}) => {
-        tidy.push({artist, artistId, album, albumId, date, song, songId})
-      })
+      // TODO cache albums
+      // TODO filter for US songs
+      for ({album, albumId, date} of albums){
+        var songs = (await dlAll(sp.getAlbumTracks, albumId))
+          .map(d => ({song: d.name, songId: d.id}))
+        
+        songs.forEach(({song, songId}) => {
+          tidy.push({artist, artistId, album, albumId, date, song, songId})
+        })
+      }
     }
+  } catch (e){
+    console.log(e)
   }
 
   io.writeDataSync(__dirname + '/../public/tidy.tsv', tidy)
@@ -69,6 +75,12 @@ async function dlAll(fn, id){
   do{
     var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
 
+    // enough to avoid rate limit? this issues suggests 10/s
+    // https://github.com/thelinmichael/spotify-web-api-node/pull/218
+    // could also retry after rate limited 
+    // https://github.com/thelinmichael/spotify-web-api-node/issues/217
+    await sleep(200) 
+
     pages = pages.concat(lastPage.items)
     opts.offset += opts.limit
   } while (lastPage.next && fn != sp.getArtistAlbums) // disable paging on artists albums; bach has too many!
@@ -76,7 +88,9 @@ async function dlAll(fn, id){
   return pages
 }
 
-
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 
 
