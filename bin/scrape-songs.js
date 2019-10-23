@@ -6,6 +6,10 @@ var jp = require('d3-jetpack')
 var sp
 var credentials = io.readDataSync(__dirname + '/credentials.json')
 
+var cachedAlbums = io.readdirFilterSync(__dirname + '/album-cache')
+var isCached = {}
+cachedAlbums.forEach(d => isCached[d.replace('.tsv', '')] = true)
+
 init()
 
 async function init(){
@@ -27,22 +31,32 @@ async function generateTidy(){
       .map(d => ({artist: d.name, artistId: d.id}))
 
     var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
-      // .slice(0, 4)
+      // .slice(0, 25)
 
     for ({artist, artistId} of uniqueArtists){
       console.log(artist)
       var albums = (await dlAll(sp.getArtistAlbums, artistId))
         .map(d => ({album: d.name, date: d.release_date, albumId: d.id}))
       
-      // TODO cache albums
-      // TODO filter for US songs
+
       for ({album, albumId, date} of albums){
-        var songs = (await dlAll(sp.getAlbumTracks, albumId))
-          .map(d => ({song: d.name, songId: d.id}))
-        
-        songs.forEach(({song, songId}) => {
-          tidy.push({artist, artistId, album, albumId, date, song, songId})
-        })
+        var albumTidy = []
+        var cachePath = `${__dirname}/album-cache/${albumId}.tsv`
+
+        if (isCached[albumId]){
+          albumTidy = io.readDataSync(cachePath)
+        } else {
+          var songs = (await dlAll(sp.getAlbumTracks, albumId))
+            .map(d => ({song: d.name, songId: d.id}))
+          
+          songs.forEach(({song, songId}) => {
+            albumTidy.push({artist, artistId, album, albumId, date, song, songId})
+          })
+  
+          io.writeDataSync(cachePath, albumTidy)
+        }
+
+        tidy.push(...albumTidy)
       }
     }
   } catch (e){
@@ -70,7 +84,7 @@ async function apiPlayground(){
 
 async function dlAll(fn, id){
   var pages = []
-  var opts = {offset: 0, limit: 50}
+  var opts = {offset: 0, limit: 50, country: 'US', include_groups: 'album,single'}
 
   do{
     var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
