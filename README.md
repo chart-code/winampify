@@ -27,3 +27,7 @@ https://developer.spotify.com/documentation/general/guides/authorization-guide/
 https://developer.spotify.com/documentation/web-api/reference-beta/#category-player
 
 https://developer.spotify.com/documentation/web-playback-sdk/reference/
+
+# TODO
+
+- bach will dl too much
