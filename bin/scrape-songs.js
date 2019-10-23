@@ -26,23 +26,22 @@ async function generateTidy(){
     .map(d => ({artist: d.name, artistId: d.id}))
 
   var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
+    // .slice(0, 4)
 
-  await uniqueArtists.forEach(async ({artist, artistId}, i) => {
-    if (i > 4) return
-
+  for ({artist, artistId} of uniqueArtists){
+    console.log(artist)
     var albums = (await dlAll(sp.getArtistAlbums, artistId))
       .map(d => ({album: d.name, date: d.release_date, albumId: d.id}))
-
-    await albums.forEach(async ({album, albumId, date}) => {
+    
+    for ({album, albumId, date} of albums){
       var songs = (await dlAll(sp.getAlbumTracks, albumId))
         .map(d => ({song: d.name, songId: d.id}))
-
+      
       songs.forEach(({song, songId}) => {
         tidy.push({artist, artistId, album, albumId, date, song, songId})
       })
-    })  
-  })
-
+    }
+  }
 
   io.writeDataSync(__dirname + '/../public/tidy.tsv', tidy)
 }
@@ -72,7 +71,7 @@ async function dlAll(fn, id){
 
     pages = pages.concat(lastPage.items)
     opts.offset += opts.limit
-  } while (lastPage.next && 0) // disable paging for faster dev
+  } while (lastPage.next && fn != sp.getArtistAlbums) // disable paging on artists albums; bach has too many!
 
   return pages
 }
