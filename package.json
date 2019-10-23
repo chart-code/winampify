@@ -1,7 +1,12 @@
 {
   "dependencies": {
+    "hot-server": "^0.0.18",
     "indian-ocean": "^4.0.0",
+    "open": "^7.0.0",
     "readline-sync": "^1.4.10",
     "spotify-web-api-node": "^4.0.0"
+  },
+  "scripts": {
+    "start": "node bin/scrape-songs.js && cd public && npx hot-server"
   }
 }

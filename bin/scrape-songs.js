@@ -1,11 +1,13 @@
 var SpotifyWebApi = require('spotify-web-api-node')
 var io = require('indian-ocean')
 
+var sp
 var credentials = io.readDataSync(__dirname + '/credentials.json')
-var sp = new SpotifyWebApi(credentials)
-
 
 async function init(){
+  if (!credentials.code) credentials = await require('./auth')()
+  sp = new SpotifyWebApi(credentials)
+
   var refreshData = await sp.refreshAccessToken()
   sp.setAccessToken(refreshData.body['access_token'])
 
