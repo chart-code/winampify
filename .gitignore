@@ -1,3 +1,6 @@
 node_modules
 
 bin/credentials.json
+
+public/tidy.tsv
+bin/album-cache/

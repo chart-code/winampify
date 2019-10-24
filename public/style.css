@@ -53,7 +53,7 @@ body{
   white-space: nowrap;
   overflow: hidden;
   padding-bottom: 0px;
-  height: 15px;
+  height: 12px;
   padding-top: 1px;
   font-size: 12px;
 }
@@ -61,15 +61,16 @@ body{
   cursor: pointer;
 }
 .row:hover{
-  background: #111;
+  background: #222;
 }
-.row:active{
-  
+.row.active{
+  background: #444;
 }
 
 .row-container{
   height: 300px;
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
+  overflow-y: auto;
 }
 
 /* Let's get this party started */
