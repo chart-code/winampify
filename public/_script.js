@@ -84,8 +84,6 @@ function initArtistTable(){
 function initLongScroll(sel, data, cols){
   sel.html('')
 
-  data = data.slice(0, 1000)
-
   var headerSel = sel.append('div.header')
     .appendMany('div.col', cols)
     .text(d => d.str)
@@ -109,19 +107,15 @@ function initLongScroll(sel, data, cols){
   //https://blocks.roadtolarissa.com/jasondavies/3689677
   //https://dev.to/adamklein/build-your-own-virtual-scroll-part-i-11ib
   var contSel = sel.append('div.row-container')
+    .on('scroll.longscroll', scroll)
   var contNode = contSel.node()
 
   var rowHeight = 30
   var contHeight = contSel.node().offsetHeight
 
-  var beforeSel = contSel.append('div.before')
   var currentSel = contSel
     .append('div').st({height: data.length*rowHeight})
     .append('div.current')
-  var afterSel = contSel.append('div.after')
-
-
-  contSel.on('scroll.longscroll', scroll)
 
   function scroll(scrollTop){
     var position = Math.floor(contNode.scrollTop/rowHeight)
@@ -129,74 +123,17 @@ function initLongScroll(sel, data, cols){
     var p0 = d3.clamp(0, position, data.length - rows)
     var p1 = p0 + rows
 
-    // beforeSel.st({height: p0*rowHeight})
-    // afterSel.st({height: (data.length - p0)*rowHeight})
     currentSel.st({transform: `translateY(${p0*rowHeight}px)`})
     var rowSel = currentSel.selectAll('.row')
-      .data(d3.range(p0, p1))
+      .data(data.slice(p0, p1), d => d.songId)
 
     rowSel.enter().append('div.row')
-      .text(d => d)
+      .text(d => d.song)
       .st({height: rowHeight, fontSize: 12})
     rowSel.exit().remove()
-    rowSel.order().text(d => d)
+    rowSel.order()
   }
 
   scroll(0)
 
 }
-
-
-d3.longscroll = function() {
-  var render = null,
-      size = 0,
-      position = 0,
-      rowHeight = 20;
-
-  function longscroll(g) {
-    g.selectAll("div.before").data([0]).enter().append("div").attr("class", "before");
-    var current = g.selectAll("div.current").data([0]);
-    current.enter().append("div").attr("class", "current");
-    g.selectAll("div.after").data([0]).enter().append("div").attr("class", "after");
-
-    g.on("scroll.longscroll", function() {
-      position = Math.floor(this.scrollTop / rowHeight);
-      scroll(this.scrollTop);
-    });
-
-    scroll(0);
-    // g.each(function() {
-    //   var g = d3.select(this);
-    //   g.property("scrollTop", +g.select(".before").style("height").replace("px", ""));
-    // });
-
-    function scroll(scrollTop) {
-      g.each(function() {
-        this.scrollTop = scrollTop;
-        var g = d3.select(this),
-            rows = 1 + Math.ceil(this.clientHeight / rowHeight),
-            position0 = Math.max(0, Math.min(size - rows, position)),
-            position1 = position0 + rows;
-
-        g.select(".before").style("height", position0 * rowHeight + "px");
-        g.select(".after").style("height", (size - position1) * rowHeight + "px");
-
-        var div = g.select(".current").selectAll("div.row")
-            .data(d3.range(position0, Math.min(position1, size)), String);
-        div.enter().append("div")
-            .attr("class", "row");
-        div.exit().remove();
-        div.order().call(render);
-      });
-    }
-  }
-
-}
-
-
-
-
-
-
-
-
