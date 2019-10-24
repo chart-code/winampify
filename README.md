@@ -31,3 +31,8 @@ https://developer.spotify.com/documentation/web-playback-sdk/reference/
 # TODO
 
 - bach will dl too much
+
+# missing fields
+- genre
+- track # (can imput, but does it matter?)
+- length
