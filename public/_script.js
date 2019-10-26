@@ -74,10 +74,10 @@ function initLongScroll(selId, data, cols){
       headerSel.classed('up', 0).classed('down', 0)
       headerSel.filter(e => e == d).classed(d.notReverse ? 'up' : 'down', 1)
 
-      aData = _.sortBy(aData, d.val)
-      if (!d.notReverse) aData.reverse() 
+      data = _.sortBy(data, d.val)
+      if (!d.notReverse) data.reverse() 
 
-      render()
+      updateActive()
     }
   }
   addHeader()
@@ -93,9 +93,9 @@ function initLongScroll(selId, data, cols){
   var numRows = 1 + Math.ceil(contHeight/rowHeight)
   var vData = aData.slice(0, numRows) // visable data
 
-  var currentSel = contSel
+  var paneSel = contSel
     .append('div').st({height: data.length*rowHeight})
-    .append('div.current')
+  var currentSel = paneSel.append('div')
 
   var rowSel = currentSel.appendMany('div.row', d3.range(numRows))
     .on('click', function(i){
@@ -112,6 +112,7 @@ function initLongScroll(selId, data, cols){
 
   function updateActive(){
     aData = data.filter(d => d.active)
+    paneSel.st({height: rowHeight*aData.length + 'px'})
     render()    
   }
 
@@ -122,10 +123,12 @@ function initLongScroll(selId, data, cols){
     
     vData = aData.slice(p0, p1)
 
-    currentSel.st({transform: `translateY(${p0*rowHeight}px)`})
-    rowSel.classed('selected', i => vData[i] == rv.selected)
+    var yPx = d3.clamp(0, p0*rowHeight, rowHeight*aData.length - contHeight)
+    currentSel.st({transform: `translateY(${yPx}px)`})
+    rowSel
+      .classed('selected', i => vData[i] == rv.selected)
+      .classed('hidden', i => !vData[i])
     colSel
-      .st({opacity: d => vData[d.i] ? 1 : 0})
       .filter(d => vData[d.i])
       .text(d => d.col.val(vData[d.i]))
   }
