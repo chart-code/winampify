@@ -6,14 +6,26 @@ body{
 
 
 #lib{
-  width: 820px;
+  width: 920px;
   font-family: menlo, Consolas, 'Lucida Console', monospace; 
   margin: 0px auto;
   background: #000;
   color: #0f0;
   padding: 20px;
   box-sizing: border-box;
+}
 
+#artists, #albums{
+  width: calc(50% - 27px);
+  display: inline-block;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+#albums{
+  margin-left: 0px;
+}
+#songs{
+  margin-top: 5px;
 }
 
 .table{
