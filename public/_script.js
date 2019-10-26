@@ -11,19 +11,22 @@ d3.loadData('tidy.tsv', (err, res) => {
   byAlbum = _.flatten(byArtist.map(d => d.byAlbum))
 
   songs.forEach(d => d.active = d.searchActive = true)
-  byAlbum.forEach(d => d.active = true)
+  byAlbum.forEach(d => {
+    d.active = true
+    d.artist = d[0].artist
+  })
   byArtist.forEach(d => d.active = true)
 
   var artistCols = [
     {str: 'Artist', ra: 0, w: 200, val: d => d.key},
-    {str: 'Albums', ra: 1, w: 80, val: d => d3.sum(d.byAlbum, d => d.active)},
+    {str: 'Albums', ra: 1, w: 80, val: d => d3.sum(d.byAlbum, d => d.searchActive)},
     {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.searchActive)},
   ]
 
   var albumCols = [
     {str: 'Album', ra: 0, w: 200, val: d => d.key},
     {str: 'Date', ra: 0, w: 75, val: d => d[0].date},
-    {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.searchActive)},
+    {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
   ]
 
   var songCols = [
@@ -38,17 +41,28 @@ d3.loadData('tidy.tsv', (err, res) => {
     album: initLongScroll('#albums', byAlbum, albumCols),
     song: initLongScroll('#songs', songs, songCols)
   }
-  d3.values(table).forEach(d => d.render())
+  filterAll()
 
 })
 
 function filterAll(){
+  if (table.artist.selected && table.album.selected){
+    if (table.album.selected.artist != table.artist.selected.key){
+      table.album.selected = null
+    }
+  } 
+
   songs.forEach(d => {
-    var isArtist = !table.artist.selected || table.artist.selected.key == d.artist
-    var isAlbum = true
+    d.artistActive = !table.artist.selected || table.artist.selected.key == d.artist
+    d.albumActive = !table.album.selected || table.album.selected.key == d.album
     d.searchActive = true
 
-    d.active = isArtist && isAlbum && d.searchActive
+    d.active = d.artistActive && d.albumActive && d.searchActive
+  })
+
+  byAlbum.forEach(d => {
+    d.searchActive = d3.sum(d, d => d.searchActive)
+    d.active = d3.sum(d, d => d.artistActive && d.searchActive)
   })
 
   d3.values(table).forEach(d => d.updateActive())
