@@ -6,7 +6,7 @@ body{
 
 
 #lib{
-  width: 720px;
+  width: 820px;
   font-family: menlo, Consolas, 'Lucida Console', monospace; 
   margin: 0px auto;
   background: #000;
@@ -63,7 +63,7 @@ body{
 .row:hover{
   background: #222;
 }
-.row.active{
+.row.selected{
   background: #444;
 }
 
