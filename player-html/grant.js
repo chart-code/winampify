@@ -1,5 +1,5 @@
 // Get the hash of the url
-const hash = window.location.hash
+var hash = window.location.hash
 .substring(1)
 .split('&')
 .reduce(function (initial, item) {
@@ -14,14 +14,14 @@ window.location.hash = '';
 // Set token
 let _token = hash.access_token;
 
-const authEndpoint = 'https://accounts.spotify.com/authorize';
+var authEndpoint = 'https://accounts.spotify.com/authorize';
 
 // Replace with your app's client ID, redirect URI and desired scopes
 console.log(window.location.href)
 
-const clientId = '012948ea7d784e819590b1096b416b0d';
-const redirectUri = window.location.href;
-const scopes = [
+var clientId = '83cc6f3e727747aab0f30bd4a501308f';
+var redirectUri = window.location.href;
+var scopes = [
     'user-top-read',
     'streaming',
     'playlist-read-private',
@@ -31,7 +31,6 @@ const scopes = [
     'user-follow-modify',
     'user-top-read',
     'user-modify-playback-state'
-
 ];
 
 // If there is no token, redirect to Spotify authorization

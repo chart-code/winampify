@@ -63,14 +63,18 @@ body{
 .row .col{
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   padding-bottom: 0px;
-  height: 12px;
+  height: 14px;
   padding-top: 1px;
   font-size: 12px;
+  position: relative;
+  top: 1px;
 }
 .row{
   cursor: pointer;
+  user-select: none; 
 }
 .row:hover{
   background: #222;
