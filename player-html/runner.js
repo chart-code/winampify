@@ -1,17 +1,16 @@
 var player;
 var next;
 window.onSpotifyWebPlaybackSDKReady = () => {
-    
     player = new Spotify.Player({
         name: 'winamp',
-        getOAuthToken: cb => { cb(_token); }
+        getOAuthToken: cb => { cb(token); }
     });
 
     // Error handling
-    player.addListener('initialization_error', ({ message }) => { console.error(message); });
-    player.addListener('authentication_error', ({ message }) => { console.error(message); });
-    player.addListener('account_error', ({ message }) => { console.error(message); });
-    player.addListener('playback_error', ({ message }) => { console.error(message); });
+    player.addListener('initialization_error', console.error)
+    player.addListener('authentication_error', console.error)
+    player.addListener('account_error', console.error)
+    player.addListener('playback_error', console.error)
 
     // Playback status updates
     player.addListener('player_state_changed', ({
@@ -31,7 +30,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         $.ajax({
             type: "PUT",
             url: "https://api.spotify.com/v1/me/player",
-            beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+            beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + token );},
             data:JSON.stringify({
                 device_ids:[player._options.id],
                 play: true
@@ -51,7 +50,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     $.ajax({
         type: "GET",
         url: "https://api.spotify.com/v1/me",
-        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + _token );},
+        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + token );},
         success: function (data, status){
             console.log(data); 
             $('#username').text(data.id);
@@ -65,7 +64,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
 
 $('#volume').mousemove(function(){
-    player.setVolume($('#volume').val() / 100);
+    // player.setVolume($('#volume').val() / 100);
 });
 
 $('#play').click(function(){

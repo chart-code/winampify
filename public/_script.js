@@ -2,6 +2,31 @@ console.clear()
 
 // d3.selectAll('.table').html('')
 
+// https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
+window.playSongs = async function(trackList){
+
+  var uris = trackList.map(d => d.songId)
+  uris = ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M"]
+
+  const response = await fetch('https://api.spotify.com/v1/me/player/play', {
+    method: 'POST',
+    mode: 'cors',
+    // cache: 'no-cache', 
+    // credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token ,
+    },
+    // redirect: 'follow', 
+    referrer: 'no-referrer', 
+    body: JSON.stringify({uris}),
+  })
+  console.log(response)
+  // var json = await response.json()
+  // console.log(json)
+}
+
+
 d3.loadData('tidy.tsv', (err, res) => {
   songs = res[0]
 
@@ -42,6 +67,8 @@ d3.loadData('tidy.tsv', (err, res) => {
     song: initLongScroll('#songs', songs, songCols)
   }
   filterAll()
+
+  playSongs(songs.slice(0, 10))
 
 })
 
@@ -149,6 +176,7 @@ function initLongScroll(selId, data, cols){
 
   return rv
 }
+
 
 
 

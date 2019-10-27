@@ -17,7 +17,11 @@ async function init(){
   sp = new SpotifyWebApi(credentials)
 
   var refreshData = await sp.refreshAccessToken()
-  sp.setAccessToken(refreshData.body['access_token'])
+  var access_token = refreshData.body['access_token']
+  sp.setAccessToken(access_token)
+  io.writeDataSync(
+    `${__dirname}/../public/codes/${credentials.code.split('_')[0]}.json`, 
+    {access_token})
 
   try { generateTidy() } catch (e){ console.log(e) }
 }
@@ -31,7 +35,6 @@ async function generateTidy(){
       .map(d => ({artist: d.name, artistId: d.id}))
 
     var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
-      // .slice(0, 25)
 
     for ({artist, artistId} of uniqueArtists){
       console.log(artist)
