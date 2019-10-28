@@ -20,6 +20,7 @@ body{
   display: inline-block;
   margin-right: 0px;
   margin-bottom: 0px;
+  margin-top: 10px;
 }
 #albums{
   margin-left: 0px;
@@ -113,6 +114,30 @@ body{
   height: 0px !important;
 }
 
+.search input{
+  margin-left: 20px;
+  background: #000;
+  color: #0f0;
+  border: 1px solid #333;
+  padding: 3px;
+  padding-left: 10px;
+  font-size: 12px;
+  margin-bottom: -20px;
+
+}
+
+.search input:focus {
+  box-shadow: 0 0 .5px .5px #0f0;
+} 
+.search input:focus:invalid {
+  /*box-shadow: 0 0 1.5px 1px #0f0;*/
+} 
+
+input:focus {
+    outline-width: 0;
+}
+
+
 
 #auth-button > div{
   color: #000;
@@ -122,7 +147,6 @@ body{
   padding: 10px;
   display: inline-block;
   cursor: pointer;
-
 }
 
 

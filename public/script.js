@@ -2,7 +2,12 @@ console.clear()
 
 
 var searchSel = d3.select('.search').html('')
-  .append('textbox')
+  .append('input')
+  .at({placeholder: 'search...'})
+  .on('input', function(){
+    searchSel.str = this.value.toLowerCase()
+    filterAll()
+  })
 
 d3.loadData('tidy.tsv', (err, res) => {
   songs = res[0]
@@ -22,7 +27,10 @@ d3.loadData('tidy.tsv', (err, res) => {
   byAlbum = _.sortBy(byAlbum, d => d.length)
   byAlbum = _.sortBy(byAlbum, d => d.date).reverse()
 
-  songs.forEach(d => d.active = d.searchActive = true)
+  songs.forEach(d => {
+    d.active = d.searchActive = true
+    d.searchStr = (d.artist + ' ' + d.album + ' ' + d.song).toLowerCase()
+  })
 
   var artistCols = [
     {str: 'Artist', ra: 0, w: 200, val: d => d.key},
@@ -61,7 +69,7 @@ function filterAll(){
   songs.forEach(d => {
     d.artistActive = !table.artist.selected || table.artist.selected.key == d.artist
     d.albumActive = !table.album.selected || table.album.selected.key == d.album
-    d.searchActive = true
+    d.searchActive = !searchSel.str || d.searchStr.includes(searchSel.str) 
 
     d.active = d.artistActive && d.albumActive && d.searchActive
   })
