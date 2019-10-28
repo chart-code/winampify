@@ -1,6 +1,6 @@
-var token = getToken()
+setToken()
 
-function getToken(){
+function setToken(){
   var hash = window.location.hash
     .substring(1)
     .split('&')
@@ -11,11 +11,24 @@ function getToken(){
       }
       return initial
     }, {})
-  window.location.hash = ''
+  // window.location.hash = ''
 
-  // Set token
-  var token = hash.access_token
+
+  if (hash.code){
+    if (window.__interval) __interval.stop()
+    window.__interval = d3.interval(async () => {
+      d3.json(`codes/${hash.code}.json`, (err, res) => {
+        window.token = res.access_token
+      })
+    }, 1000*60*10)
+
+    return
+  }
+
+  // set token
+  window.token = hash.access_token
   if (token) return token
+
 
   var authEndpoint = 'https://accounts.spotify.com/authorize'
 
@@ -32,20 +45,15 @@ function getToken(){
     'user-top-read',
     'user-modify-playback-state'
   ]
-  window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token&state=123`
 
-  // Make a call using the token
-  // $.ajax({
-  //   url: "https://api.spotify.com/v1/me/top/artists",
-  //   type: "GET",
-  //   beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + token )},
-  //   success: function(data) { 
-  //     // Do something with the returned data
-  //     data.items.map(function(artist) {
-  //     let item = $('<li>' + artist.name + '</li>')
-  //     item.appendTo($('#top-artists'))
-  //     })
-  //   }
-  // })
+  d3.select('#auth-button').html('')
+    .append('div')
+    .text('Authenticate With Spotify')
+    .on('click', () => {
+      window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token&state=123`
+    })
+
+    console.log("hi")
+  
 
 }

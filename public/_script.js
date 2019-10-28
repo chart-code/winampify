@@ -1,32 +1,5 @@
 console.clear()
 
-// d3.selectAll('.table').html('')
-
-// https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
-window.playSongs = async function(trackList){
-
-  var uris = trackList.map(d => d.songId)
-  uris = ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M"]
-
-  const response = await fetch('https://api.spotify.com/v1/me/player/play', {
-    method: 'POST',
-    mode: 'cors',
-    // cache: 'no-cache', 
-    // credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token ,
-    },
-    // redirect: 'follow', 
-    referrer: 'no-referrer', 
-    body: JSON.stringify({uris}),
-  })
-  console.log(response)
-  // var json = await response.json()
-  // console.log(json)
-}
-
-
 d3.loadData('tidy.tsv', (err, res) => {
   songs = res[0]
 
@@ -67,9 +40,6 @@ d3.loadData('tidy.tsv', (err, res) => {
     song: initLongScroll('#songs', songs, songCols)
   }
   filterAll()
-
-  playSongs(songs.slice(0, 10))
-
 })
 
 function filterAll(){
@@ -144,7 +114,10 @@ function initLongScroll(selId, data, cols){
       if (!d) return
       rv.selected = rv.selected != d ? d : null
       filterAll()
-      // TODO play song?
+
+      if (selId != '#songs') return
+      
+      playSongs(aData.slice(i + p0))     
     })
 
   var colSel = rowSel.appendMany('div.col', i => cols.map(col => ({col, i})))
@@ -157,10 +130,12 @@ function initLongScroll(selId, data, cols){
     render()    
   }
 
+  var p0 = 0
+  var p1 = 0
   function render(){
     var position = Math.floor(contNode.scrollTop/rowHeight)
-    var p0 = d3.clamp(0, position, data.length - numRows)
-    var p1 = p0 + numRows
+    p0 = d3.clamp(0, position, data.length - numRows)
+    p1 = p0 + numRows
     
     vData = aData.slice(p0, p1)
 
@@ -179,6 +154,30 @@ function initLongScroll(selId, data, cols){
 
 
 
+// https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
+async function playSongs(trackList){
+  var uris = trackList
+    .slice(0, 100)
+    .map(d => 'spotify:track:' + d.songId)
+
+  const response = await fetch('https://api.spotify.com/v1/me/player/play', {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token ,
+    },
+    referrer: 'no-referrer', 
+    body: JSON.stringify({uris}),
+  })
+  console.log(response)
+  try {
+    var json = await response.json()
+    console.log(json)
+  } catch (e){
+
+  }
+}
 
 
 

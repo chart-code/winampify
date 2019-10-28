@@ -113,3 +113,16 @@ body{
   height: 0px !important;
 }
 
+
+#auth-button > div{
+  color: #000;
+  background: #0f0;
+  margin: 20px;
+  margin-top: 0px;
+  padding: 10px;
+  display: inline-block;
+  cursor: pointer;
+
+}
+
+

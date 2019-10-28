@@ -2,6 +2,7 @@ var SpotifyWebApi = require('spotify-web-api-node')
 var io = require('indian-ocean')
 var d3 = require('d3')
 var jp = require('d3-jetpack')
+var fs = require('fs')
 
 var sp
 var credentials = io.readDataSync(__dirname + '/credentials.json')
@@ -9,6 +10,8 @@ var credentials = io.readDataSync(__dirname + '/credentials.json')
 var cachedAlbums = io.readdirFilterSync(__dirname + '/album-cache')
 var isCached = {}
 cachedAlbums.forEach(d => isCached[d.replace('.tsv', '')] = true)
+
+var tidyPath = __dirname + '/../public/tidy.tsv'
 
 init()
 
@@ -23,6 +26,10 @@ async function init(){
     `${__dirname}/../public/codes/${credentials.code.split('_')[0]}.json`, 
     {access_token})
 
+  // only update song list twice a day
+  var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
+  // if (new Date() - tidyUpdated < 1000*60*60*12) return
+
   try { generateTidy() } catch (e){ console.log(e) }
 }
 
@@ -32,6 +39,7 @@ async function generateTidy(){
 
     var artists = (await dlAll(sp.getMySavedTracks))
       .map(d => d.track.artists[0])
+      .filter(d => d.id != '5aIqB5nVVvmFsvSdExz408') // dump bach
       .map(d => ({artist: d.name, artistId: d.id}))
 
     var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
@@ -66,7 +74,7 @@ async function generateTidy(){
     console.log(e)
   }
 
-  io.writeDataSync(__dirname + '/../public/tidy.tsv', tidy)
+  io.writeDataSync(tidyPath, tidy)
 }
 
 async function apiPlayground(){
