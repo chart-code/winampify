@@ -1,3 +1,6 @@
+window.dataPath = location.href.includes('roadtolarissa.com') || 1 ? 
+  'https://roadtolarissa.com/slinks/spotify-winamp/' : ''
+
 setToken()
 
 function setToken(){
@@ -13,12 +16,11 @@ function setToken(){
     }, {})
   // window.location.hash = ''
 
-  console.log(hash)
   if (hash.code){
     if (window.__interval) __interval.stop()
     function updateToken(){
       console.log('update')
-      d3.json(`codes/${hash.code}.json`, (err, res) => {
+      d3.json(`${dataPath}codes/${hash.code}.json`, (err, res) => {
         window.token = res.access_token
       })
     }

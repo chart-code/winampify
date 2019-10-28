@@ -34,12 +34,12 @@ body{
   border: 1px solid #333;
 }
 
-.header{
+.table-header{
   margin-bottom: 1px;
   background: #232230;
 }
 
-.header > div{
+.table-header > div{
   display: inline-block;
   border-right: 1px solid #000;
   background: #303046;
@@ -48,7 +48,7 @@ body{
 }
 /* todo sort arrow */
 
-.header > div:hover{
+.table-header > div:hover{
   background: #4a4a6d;
 }
 

@@ -1,6 +1,3 @@
-console.clear()
-
-
 var searchSel = d3.select('.search').html('')
   .append('input')
   .at({placeholder: 'search...'})
@@ -9,7 +6,7 @@ var searchSel = d3.select('.search').html('')
     filterAll()
   })
 
-d3.loadData('tidy.tsv', (err, res) => {
+d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   songs = res[0]
 
   byArtist = d3.nestBy(songs, d => d.artist)
@@ -89,7 +86,7 @@ function initLongScroll(selId, data, cols){
   var rv = {selId, render, updateActive}
 
   function addHeader(){
-    var headerSel = sel.append('div.header')
+    var headerSel = sel.append('div.table-header')
       .appendMany('div.col', cols)
       .text(d => d.str)
       .st({width: d => d.w})
