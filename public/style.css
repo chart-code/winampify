@@ -1,13 +1,14 @@
-body{
+html{
   background: #000;
   scrollbar-color: dark;
-
 }
 
 
 #lib{
   width: 920px;
   font-family: menlo, Consolas, 'Lucida Console', monospace; 
+  line-height: 1em;
+  font-size: 12px;
   margin: 0px auto;
   background: #000;
   color: #0f0;
