@@ -1,4 +1,6 @@
-# Installations
+The spotify API has strict rate limits and finding all the tracks by liked artists can require thousands of calls. Application rate limits don't increase with more users; to view your own library with this tool you'll to run it yourself. 
+
+# Installation
 
 Create a [spotify application](https://developer.spotify.com/dashboard/applications) and save to `bin/credentials.json`. 
 
@@ -6,17 +8,18 @@ Create a [spotify application](https://developer.spotify.com/dashboard/applicati
 {
   "clientId" : "abc",
   "clientSecret" : "xyz",
-  "redirectUri" : "http://localhost:3989/"
+  "redirectUri" : "http://localhost:3989/public/"
 }
 ```
 
-In the spotify dashboard, you'll need to click Edit Settings" to add `http://localhost:3989/` as a redirectUri.  
+In the spotify dashboard, you'll need to click "Edit Settings" to add `http://localhost:3989/public/` as a redirectUri.  
 
 `yarn && yarn start` will walk you through the rest of the OAuth process, download a list of all the songs by artists you've liked on spotify and start a server to view your library. 
 
+Auth tokens only last an hour; to avoid having to regularly reload the page to pick up a new Implicit Grant tokens, run `bin/update.sh` and open the page with the provided code parameter. 
 
 
-# links
+# Links
 
 https://github.com/thelinmichael/spotify-web-api-node
 
@@ -35,5 +38,5 @@ https://developer.spotify.com/documentation/web-playback-sdk/reference/
 
 # missing fields
 - genre
-- track # (can imput, but does it matter?)
+- x track # (can impute, but does it matter?)
 - length

@@ -1,5 +1,9 @@
 console.clear()
 
+
+var searchSel = d3.select('.search').html('')
+  .append('textbox')
+
 d3.loadData('tidy.tsv', (err, res) => {
   songs = res[0]
 
@@ -15,6 +19,7 @@ d3.loadData('tidy.tsv', (err, res) => {
     d.date = d[0].date
     d.forEach((e, i) => e.trackNum = i)
   })
+  byAlbum = _.sortBy(byAlbum, d => d.length)
   byAlbum = _.sortBy(byAlbum, d => d.date).reverse()
 
   songs.forEach(d => d.active = d.searchActive = true)

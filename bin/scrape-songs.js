@@ -27,7 +27,7 @@ async function init(){
     `${__dirname}/../public/codes/${credentials.code.split('_')[0]}.json`, 
     {access_token})
 
-  console.log(`http://localhost:3989#code=${credentials.code.split('_')[0]}`)
+  console.log(`http://localhost:3989/public/#code=${credentials.code.split('_')[0]}`)
 
   // only update song list twice a day
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
