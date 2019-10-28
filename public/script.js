@@ -113,9 +113,9 @@ function initLongScroll(selId, data, cols){
     .on('scroll.longscroll', render)
   var contNode = contSel.node()
 
-  var rowHeight = 19
+  var rowHeight = 17
   var contHeight = contSel.node().offsetHeight
-  var numRows = 1 + Math.ceil(contHeight/rowHeight)
+  var numRows = 5 + Math.ceil(contHeight/rowHeight)
   var vData = aData.slice(0, numRows) // visable data
 
   var paneSel = contSel
