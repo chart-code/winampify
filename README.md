@@ -30,7 +30,8 @@ https://developer.spotify.com/documentation/web-playback-sdk/reference/
 
 # TODO
 
-- bach will dl too much
+- x bach will dl too much
+- add search bar
 
 # missing fields
 - genre

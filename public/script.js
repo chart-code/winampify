@@ -3,17 +3,21 @@ console.clear()
 d3.loadData('tidy.tsv', (err, res) => {
   songs = res[0]
 
-
   byArtist = d3.nestBy(songs, d => d.artist)
   byArtist.forEach(d => d.byAlbum = d3.nestBy(d, d => d.album))
-  byAlbum = _.flatten(byArtist.map(d => d.byAlbum))
+  byArtist.forEach(d => d.active = true)
+  byArtist = _.sortBy(byArtist, d => d.key)
 
-  songs.forEach(d => d.active = d.searchActive = true)
+  byAlbum = _.flatten(byArtist.map(d => d.byAlbum))
   byAlbum.forEach(d => {
     d.active = true
     d.artist = d[0].artist
+    d.date = d[0].date
+    d.forEach((e, i) => e.trackNum = i)
   })
-  byArtist.forEach(d => d.active = true)
+  byAlbum = _.sortBy(byAlbum, d => d.date).reverse()
+
+  songs.forEach(d => d.active = d.searchActive = true)
 
   var artistCols = [
     {str: 'Artist', ra: 0, w: 200, val: d => d.key},
@@ -23,7 +27,7 @@ d3.loadData('tidy.tsv', (err, res) => {
 
   var albumCols = [
     {str: 'Album', ra: 0, w: 200, val: d => d.key},
-    {str: 'Date', ra: 0, w: 75, val: d => d[0].date},
+    {str: 'Date', ra: 0, w: 75, val: d => d.date},
     {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
   ]
 
@@ -58,8 +62,8 @@ function filterAll(){
   })
 
   byAlbum.forEach(d => {
-    d.searchActive = d3.sum(d, d => d.searchActive)
-    d.active = d3.sum(d, d => d.artistActive && d.searchActive)
+    d.searchActive = d.some(d => d.searchActive)
+    d.active = d.some(d => d.artistActive && d.searchActive) 
   })
 
   d3.values(table).forEach(d => d.updateActive())

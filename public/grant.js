@@ -13,14 +13,17 @@ function setToken(){
     }, {})
   // window.location.hash = ''
 
-
+  console.log(hash)
   if (hash.code){
     if (window.__interval) __interval.stop()
-    window.__interval = d3.interval(async () => {
+    function updateToken(){
+      console.log('update')
       d3.json(`codes/${hash.code}.json`, (err, res) => {
         window.token = res.access_token
       })
-    }, 1000*60*10)
+    }
+    updateToken()
+    window.__interval = d3.interval(updateToken, 1000*60*10)
 
     return
   }
@@ -54,6 +57,6 @@ function setToken(){
     })
 
     console.log("hi")
-  
+
 
 }

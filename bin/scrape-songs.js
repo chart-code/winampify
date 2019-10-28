@@ -3,6 +3,7 @@ var io = require('indian-ocean')
 var d3 = require('d3')
 var jp = require('d3-jetpack')
 var fs = require('fs')
+var _ = require('underscore')
 
 var sp
 var credentials = io.readDataSync(__dirname + '/credentials.json')
@@ -26,9 +27,11 @@ async function init(){
     `${__dirname}/../public/codes/${credentials.code.split('_')[0]}.json`, 
     {access_token})
 
+  console.log(`http://localhost:3989#code=${credentials.code.split('_')[0]}`)
+
   // only update song list twice a day
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  // if (new Date() - tidyUpdated < 1000*60*60*12) return
+  if (new Date() - tidyUpdated < 1000*60*60*12) return
 
   try { generateTidy() } catch (e){ console.log(e) }
 }
@@ -74,23 +77,14 @@ async function generateTidy(){
     console.log(e)
   }
 
+  jp.nestBy(tidy, d => d.albumId).forEach(album => {
+    album.forEach((d, i) => d.trackNum = i + 1)
+  })
+  tidy = _.sortBy(tidy, d => -d.trackNum)
+  tidy = _.sortBy(tidy, d => d.album)
+  tidy = _.sortBy(tidy, d => d.date).reverse()
+
   io.writeDataSync(tidyPath, tidy)
-}
-
-async function apiPlayground(){
-  var meData = (await sp.getMe()).body
-  // console.log(meData)
-  var savedTracks = await sp.getMySavedTracks()
-  var artistId = savedTracks.body.items[0].track.artists[0].id
-  console.log({artistId})
-
-  var albums = await sp.getArtistAlbums(artistId)
-  // console.log(albums.body.items)
-  var albumId = albums.body.items[0].id
-  console.log({albumId})
-
-  var album = await sp.getAlbumTracks(albumId)
-  console.log(album.body)
 }
 
 async function dlAll(fn, id){
