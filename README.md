@@ -35,7 +35,9 @@ https://developer.spotify.com/documentation/web-playback-sdk/reference/
 
 - x bach will dl too much
 - x add search bar
-- blue select
+- blue select background
+- arrow keys to nav table
+- thinner
 
 # missing fields
 - genre

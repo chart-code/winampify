@@ -5,7 +5,7 @@ html{
 
 
 #lib{
-  width: 920px;
+  width: 764px;
   font-family: menlo, Consolas, 'Lucida Console', monospace; 
   line-height: 1em;
   font-size: 12px;
@@ -17,8 +17,14 @@ html{
   position: relative;
 }
 
+#artists{
+  width: 321px;
+}
+#albums{
+  width: 352px;
+}
 #artists, #albums{
-  width: calc(50% - 27px);
+  /*width: calc(50% - 27px);*/
   display: inline-block;
   margin-right: 0px;
   margin-bottom: 0px;
@@ -141,7 +147,7 @@ input:focus {
 
 #auth-button{
   position: absolute;
-  right: 43px;
+  right: 40px;
   top: 20px;
 }
 

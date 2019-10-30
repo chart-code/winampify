@@ -26,23 +26,23 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
 
   songs.forEach(d => {
     d.active = d.searchActive = true
-    d.searchStr = (d.artist + ' ' + d.album + ' ' + d.song).toLowerCase()
+    d.searchStr = (d.artist + ' ' + d.album + ' ' + d.song + ' ' + d.date).toLowerCase()
   })
 
   var artistCols = [
-    {str: 'Artist', ra: 0, w: 200, val: d => d.key},
-    {str: 'Albums', ra: 1, w: 80, val: d => d3.sum(d.byAlbum, d => d.searchActive)},
-    {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.searchActive)},
+    {str: 'Artist', ra: 0, w: 180, val: d => d.key},
+    {str: 'Albums', ra: 1, w: 45, val: d => d3.sum(d.byAlbum, d => d.searchActive)},
+    {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.searchActive)},
   ]
 
   var albumCols = [
-    {str: 'Album', ra: 0, w: 200, val: d => d.key},
+    {str: 'Album', ra: 0, w: 180, val: d => d.key},
     {str: 'Date', ra: 0, w: 75, val: d => d.date},
-    {str: 'Tracks', ra: 1, w: 80, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
+    {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
   ]
 
   var songCols = [
-    {str: 'Title', ra: 0, w: 180, val: d => d.song},
+    {str: 'Title', ra: 0, w: 182, val: d => d.song},
     {str: 'Artist', ra: 0, w: 180, val: d => d.artist},
     {str: 'Album', ra: 0, w: 180, val: d => d.album},
     {str: 'Date', ra: 0, w: 75, val: d => d.date},
@@ -75,7 +75,9 @@ function filterAll(){
 
   byAlbum.forEach(d => {
     d.searchActive = d.some(d => d.searchActive)
-    d.active = d.some(d => d.artistActive && d.searchActive) 
+    d.lengthActive = searchSel.str || table.artist.selected || d.length > 3
+
+    d.active = d.some(d => d.artistActive && d.searchActive) && d.lengthActive 
   })
 
   d3.values(table).forEach(d => d.updateActive())

@@ -31,7 +31,7 @@ async function init(){
 
   // only update song list twice a day
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  if (new Date() - tidyUpdated < 1000*60*60*12) return
+  if (new Date() - tidyUpdated < 1000*60*60*4) return
 
   try { generateTidy() } catch (e){ console.log(e) }
 }
