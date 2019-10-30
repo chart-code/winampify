@@ -30,21 +30,21 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   })
 
   var artistCols = [
-    {str: 'Artist', ra: 0, w: 180, val: d => d.key},
+    {str: 'Artist', ra: 0, w: 219, val: d => d.key},
     {str: 'Albums', ra: 1, w: 45, val: d => d3.sum(d.byAlbum, d => d.searchActive)},
     {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.searchActive)},
   ]
 
   var albumCols = [
-    {str: 'Album', ra: 0, w: 180, val: d => d.key},
+    {str: 'Album', ra: 0, w: 205, val: d => d.key},
     {str: 'Date', ra: 0, w: 75, val: d => d.date},
     {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
   ]
 
   var songCols = [
-    {str: 'Title', ra: 0, w: 182, val: d => d.song},
-    {str: 'Artist', ra: 0, w: 180, val: d => d.artist},
-    {str: 'Album', ra: 0, w: 180, val: d => d.album},
+    {str: 'Title', ra: 0, w: 183, val: d => d.song},
+    {str: 'Artist', ra: 0, w: 219, val: d => d.artist},
+    {str: 'Album', ra: 0, w: 205, val: d => d.album},
     {str: 'Date', ra: 0, w: 75, val: d => d.date},
   ]
 

@@ -5,7 +5,7 @@ html{
 
 
 #lib{
-  width: 764px;
+  width: 750px;
   font-family: menlo, Consolas, 'Lucida Console', monospace; 
   line-height: 1em;
   font-size: 12px;
@@ -13,15 +13,17 @@ html{
   background: #000;
   color: #0f0;
   padding: 20px;
+  padding-left: 0px;
+  padding-right: 0px;
   box-sizing: border-box;
   position: relative;
 }
 
 #artists{
-  width: 321px;
+  width: 361px;
 }
 #albums{
-  width: 352px;
+  width: calc(750px - 361px - 12px);
 }
 #artists, #albums{
   /*width: calc(50% - 27px);*/
@@ -35,10 +37,13 @@ html{
 }
 #songs{
   margin-top: 5px;
+  width: calc(100% - 3px);
 }
 
 .table{
   margin: 20px;
+  margin-left: 0px;
+  margin-right: 0px;
   border: 1px solid #333;
 }
 
@@ -123,7 +128,7 @@ html{
 }
 
 .search input{
-  margin-left: 20px;
+  margin-left: 0px;
   background: #000;
   color: #0f0;
   border: 1px solid #333;
@@ -147,16 +152,15 @@ input:focus {
 
 #auth-button{
   position: absolute;
-  right: 40px;
+  right: 1px;
   top: 20px;
 }
 
 #auth-button > div{
   color: #000;
   background: #0f0;
-  margin: 20px;
   margin-top: 0px;
-  padding: 10px;
+  padding: 5px;
   display: inline-block;
   cursor: pointer;
 }

@@ -33,7 +33,7 @@ function setToken(){
 
   // set token
   window.token = hash.access_token
-  if (token) return setTimeout(addDeviceSelect, 1)
+  if (token) return setTimeout(() => addDeviceSelect(), 1)
 
 
   var authEndpoint = 'https://accounts.spotify.com/authorize'
