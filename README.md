@@ -34,7 +34,8 @@ https://developer.spotify.com/documentation/web-playback-sdk/reference/
 # TODO
 
 - x bach will dl too much
-- add search bar
+- x add search bar
+- blue select
 
 # missing fields
 - genre

@@ -14,6 +14,7 @@ html{
   color: #0f0;
   padding: 20px;
   box-sizing: border-box;
+  position: relative;
 }
 
 #artists, #albums{
@@ -124,7 +125,6 @@ html{
   padding-left: 10px;
   font-size: 12px;
   margin-bottom: -20px;
-
 }
 
 .search input:focus {
@@ -135,10 +135,15 @@ html{
 } 
 
 input:focus {
-    outline-width: 0;
+  outline-width: 0;
 }
 
 
+#auth-button{
+  position: absolute;
+  right: 43px;
+  top: 20px;
+}
 
 #auth-button > div{
   color: #000;
@@ -149,5 +154,21 @@ input:focus {
   display: inline-block;
   cursor: pointer;
 }
+
+
+select{
+  background: #000;
+  color: #0f0;
+  height: 20px;
+  padding: 10px;
+  -webkit-border-radius: 0;
+  border: 0;
+  outline: 1px solid #333;
+  outline-offset: -1px;
+  height: 24px;
+  max-width: 150px;
+}
+
+
 
 

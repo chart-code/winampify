@@ -22,6 +22,7 @@ function setToken(){
       console.log('update')
       d3.json(`${dataPath}codes/${hash.code}.json`, (err, res) => {
         window.token = res.access_token
+        addDeviceSelect()
       })
     }
     updateToken()
@@ -32,7 +33,7 @@ function setToken(){
 
   // set token
   window.token = hash.access_token
-  if (token) return token
+  if (token) return setTimeout(addDeviceSelect, 1)
 
 
   var authEndpoint = 'https://accounts.spotify.com/authorize'
@@ -57,8 +58,6 @@ function setToken(){
     .on('click', () => {
       window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token&state=123`
     })
-
-    console.log("hi")
 
 
 }

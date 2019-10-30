@@ -54,6 +54,8 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
     song: initLongScroll('#songs', songs, songCols)
   }
   filterAll()
+
+  if (token) addDeviceSelect()
 })
 
 function filterAll(){
@@ -166,7 +168,30 @@ function initLongScroll(selId, data, cols){
   return rv
 }
 
+async function addDeviceSelect(){
+  var {devices, activeDevice} = await getDevices()
 
+  var preferedDevice = activeDevice
+  try {
+    preferedDevice = JSON.parse(localStorage.getItem('winampify-prefered'))
+  } catch (e){}
+
+  var preferedId = preferedDevice ? preferedDevice.id : ''
+  var activeId = activeDevice ? activeDevice.id : ''
+  if (preferedId != activeId && preferedId) setDevice(preferedDevice.id)
+
+  // TODO show that the device isn't active? Or maybe music makes this obvious
+  var selectSel = d3.select('#auth-button').html('')
+    .append('select')
+    .on('change', () => {
+      var name = selectSel.parent().node().value
+      var device = devices.find(d => d.name == name)
+      localStorage.setItem('winampify-prefered', JSON.stringify(device))
+      setDevice(device.id)
+    })
+    .appendMany('option', _.sortBy(devices, d => preferedId == d.id ? -1 : 0))
+    .text(d => d.name)
+}
 
 // https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
 async function playSongs(trackList){
@@ -174,25 +199,74 @@ async function playSongs(trackList){
     .slice(0, 100)
     .map(d => 'spotify:track:' + d.songId)
 
-  const response = await fetch('https://api.spotify.com/v1/me/player/play', {
+  var response = await fetch('https://api.spotify.com/v1/me/player/play', {
     method: 'PUT',
-    mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token ,
     },
-    referrer: 'no-referrer', 
     body: JSON.stringify({uris}),
   })
   console.log(response)
+
   try {
     var json = await response.json()
-    console.log(json)
-  } catch (e){
-
-  }
+    if (json) console.log(json.error)
+  } catch (e){}
 }
 
+// https://developer.spotify.com/documentation/web-api/reference-beta/#endpoint-get-a-users-available-devices
+async function getDevices(){
+  var response = await fetch('https://api.spotify.com/v1/me/player/devices', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token ,
+    },
+  })
+  console.log(response)
+
+  var prevDevices = []
+  try {
+    prevDevices = JSON.parse(localStorage.getItem('winampify-devices'))
+      .filter(d => d)
+  } catch (e){ console.log(e) }
+
+  try {
+    var json = await response.json()
+    var curDevices = json.devices
+
+    var devices = d3.nestBy(curDevices.concat(prevDevices), d => d.id)
+      .map(([{id, name}]) => ({id, name}))
+    localStorage.setItem('winampify-devices', JSON.stringify(devices))
+
+    return {devices, activeDevice: curDevices.find(d => d.is_active)}
+
+  } catch (e){ console.log(e) }
+}
+
+// https://developer.spotify.com/documentation/web-api/reference-beta/#endpoint-transfer-a-users-playback
+async function setDevice(id){
+  if (Document.hidden) return
+
+  var response = await fetch('https://api.spotify.com/v1/me/player', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token ,
+    },
+    body: JSON.stringify({device_ids: [id], play: true}),
+  })
+
+  try {
+    var json = await response.json()
+    if (json) console.log(json.error)
+  } catch (e){}
+}
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 
 
