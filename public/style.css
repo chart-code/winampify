@@ -17,6 +17,8 @@ html{
   padding-right: 0px;
   box-sizing: border-box;
   position: relative;
+  opacity: 0;
+  height: 732px;
 }
 
 #artists{

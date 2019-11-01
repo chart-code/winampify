@@ -9,6 +9,8 @@ var searchSel = d3.select('.search').html('')
 d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   songs = res[0]
 
+  d3.select('#lib').st({opacity: 1})
+
   byArtist = d3.nestBy(songs, d => d.artistId)
   byArtist.forEach(d => {
     d.byAlbum = d3.nestBy(d, d => d.albumId)
@@ -220,7 +222,10 @@ async function playSongs(trackList){
 
   try {
     var json = await response.json()
-    if (json) console.log(json.error)
+    if (json){
+      console.log(json.error)
+      alert(json.error.message)
+    }
   } catch (e){}
 }
 
@@ -242,7 +247,7 @@ async function getDevices(){
 
   try {
     var json = await response.json()
-    var curDevices = json.devices
+    var curDevices = json.devices || []
 
     var devices = d3.nestBy(curDevices.concat(prevDevices), d => d.id)
       .map(([{id, name}]) => ({id, name}))

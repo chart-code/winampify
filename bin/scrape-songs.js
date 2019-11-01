@@ -24,18 +24,20 @@ async function init(){
   var refreshData = await sp.refreshAccessToken()
   var access_token = refreshData.body['access_token']
   sp.setAccessToken(access_token)
-  io.writeDataSync(
-    `${__dirname}/../public/codes/${credentials.code.split('_')[0]}.json`, 
-    {access_token})
+  var loginCode = credentials.login_code || credentials.code.split('_')[0]
+  io.writeDataSync(`${__dirname}/../public/codes/${loginCode}.json`, {access_token})
 
-  console.log(`http://localhost:3989/public/#code=${credentials.code.split('_')[0]}`)
+  console.log(`starting http://localhost:3989/public/#code=${loginCode}`)
 
   // only update song list every four hours a day
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  if (new Date() - tidyUpdated < 1000*60*60*4) return
+  // if (new Date() - tidyUpdated < 1000*60*60*4) return
 
+  try {
+    await generateTidy() 
+    console.log(`done http://localhost:3989/public/#code=${loginCode}`)
+  } catch (e){ console.log(e) }
 
-  try { generateTidy() } catch (e){ console.log(e) }
 }
 
 async function generateTidy(){
