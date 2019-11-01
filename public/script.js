@@ -80,6 +80,10 @@ function filterAll(){
     d.active = d.some(d => d.artistActive && d.searchActive) && d.lengthActive 
   })
 
+  byArtist.forEach(d => {
+    d.active = d.some(d => d.searchActive)
+  })
+
   d3.values(table).forEach(d => d.updateActive())
 }
 
