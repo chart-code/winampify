@@ -10,7 +10,7 @@
     "underscore": "^1.9.1"
   },
   "scripts": {
-    "start": "node bin/scrape-songs.js && npx hot-server",
+    "start": "npx hot-server && node bin/scrape-songs.js",
     "pub": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules --exclude .git winamp-spotify/ demo@roadtolarissa.com:winamp-spotify/"
   }
 }

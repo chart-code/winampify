@@ -13,6 +13,7 @@ var isCached = {}
 cachedAlbums.forEach(d => isCached[d.replace('.tsv', '')] = true)
 
 var tidyPath = __dirname + '/../public/tidy.tsv'
+// processTidy(io.readDataSync(tidyPath))
 
 init()
 
@@ -29,9 +30,10 @@ async function init(){
 
   console.log(`http://localhost:3989/public/#code=${credentials.code.split('_')[0]}`)
 
-  // only update song list twice a day
+  // only update song list every four hours a day
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
   if (new Date() - tidyUpdated < 1000*60*60*4) return
+
 
   try { generateTidy() } catch (e){ console.log(e) }
 }
@@ -76,6 +78,19 @@ async function generateTidy(){
   } catch (e){
     console.log(e)
   }
+
+  processTidy(tidy)
+}
+
+function processTidy(tidy){
+  // remove duplicated albums
+  jp.nestBy(tidy, d => d.artistId + d.album).forEach(album => {
+    if (_.uniq(album.map(d => d.albumId)).length == 1) return
+    var bySongName = jp.nestBy(album, d => d.song)
+    if (bySongName.some(d => d.length == 1)) return
+    bySongName.forEach(d => d.slice(1).forEach(d => d.remove = true))
+  })
+  tidy = tidy.filter(d => !d.remove)
 
   jp.nestBy(tidy, d => d.albumId).forEach(album => {
     album.forEach((d, i) => d.trackNum = i + 1)

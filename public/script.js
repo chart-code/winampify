@@ -9,17 +9,20 @@ var searchSel = d3.select('.search').html('')
 d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   songs = res[0]
 
-  byArtist = d3.nestBy(songs, d => d.artist)
-  byArtist.forEach(d => d.byAlbum = d3.nestBy(d, d => d.album))
-  byArtist.forEach(d => d.active = true)
-  byArtist = _.sortBy(byArtist, d => d.key)
+  byArtist = d3.nestBy(songs, d => d.artistId)
+  byArtist.forEach(d => {
+    d.byAlbum = d3.nestBy(d, d => d.albumId)
+    d.active = true
+    d.keyStr = d[0].artist
+  })
+  byArtist = _.sortBy(byArtist, d => d.keyStr)
 
   byAlbum = _.flatten(byArtist.map(d => d.byAlbum))
   byAlbum.forEach(d => {
     d.active = true
     d.artist = d[0].artist
     d.date = d[0].date
-    d.forEach((e, i) => e.trackNum = i)
+    d.keyStr = d[0].album
   })
   byAlbum = _.sortBy(byAlbum, d => d.length)
   byAlbum = _.sortBy(byAlbum, d => d.date).reverse()
@@ -30,13 +33,13 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   })
 
   var artistCols = [
-    {str: 'Artist', ra: 0, w: 219, val: d => d.key},
+    {str: 'Artist', ra: 0, w: 219, val: d => d.keyStr},
     {str: 'Albums', ra: 1, w: 45, val: d => d3.sum(d.byAlbum, d => d.searchActive)},
     {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.searchActive)},
   ]
 
   var albumCols = [
-    {str: 'Album', ra: 0, w: 205, val: d => d.key},
+    {str: 'Album', ra: 0, w: 205, val: d => d.keyStr},
     {str: 'Date', ra: 0, w: 75, val: d => d.date},
     {str: 'Tracks', ra: 1, w: 45, val: d => d3.sum(d, d => d.artistActive && d.searchActive)},
   ]
@@ -66,8 +69,8 @@ function filterAll(){
   } 
 
   songs.forEach(d => {
-    d.artistActive = !table.artist.selected || table.artist.selected.key == d.artist
-    d.albumActive = !table.album.selected || table.album.selected.key == d.album
+    d.artistActive = !table.artist.selected || table.artist.selected.key == d.artistId
+    d.albumActive = !table.album.selected || table.album.selected.key == d.albumId
     d.searchActive = !searchSel.str || d.searchStr.includes(searchSel.str) 
 
     d.active = d.artistActive && d.albumActive && d.searchActive
