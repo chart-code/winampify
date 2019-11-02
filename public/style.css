@@ -96,7 +96,9 @@ html{
   background: #222;
 }
 .row.selected{
-  background: #444;
+  /*background: #444;*/
+  background: #0800B6;
+  color: #fff;
 }
 
 .row-container{

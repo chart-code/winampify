@@ -60,12 +60,17 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   }
   filterAll()
 
+  d3.select(window).on('keypress.clear', function(e){
+    // TODO clear filters with shortcut
+  })
+
   if (token) addDeviceSelect()
 })
 
 function filterAll(){
   if (table.artist.selected && table.album.selected){
-    if (table.album.selected.artist != table.artist.selected.key){
+
+    if (table.album.selected[0].artistId != table.artist.selected.key){
       table.album.selected = null
     }
   } 
@@ -139,6 +144,8 @@ function initLongScroll(selId, data, cols){
     .on('click', function(i){
       var d = vData[i]
       if (!d) return
+      console.log(rv.selected != d)
+      console.log(rv.selected != d ? d : null)
       rv.selected = rv.selected != d ? d : null
       filterAll()
 
@@ -222,9 +229,9 @@ async function playSongs(trackList){
 
   try {
     var json = await response.json()
-    if (json){
+    if (json && window.token){
       console.log(json.error)
-      alert(json.error.message)
+      alert('error: ' +  json.error.message + '\nTry opening spotify, starting playback and reloading this page.')
     }
   } catch (e){}
 }
