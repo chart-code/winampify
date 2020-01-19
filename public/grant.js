@@ -1,5 +1,4 @@
-window.dataPath = location.href.includes('roadtolarissa.com') || 0 ? 
-  'https://roadtolarissa.com/slinks/spotify-winamp/' : ''
+window.dataPath = window.dataPathOverride || ''
 
 setToken()
 

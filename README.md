@@ -1,4 +1,4 @@
-The spotify API has strict rate limits and finding all the tracks by liked artists can require thousands of calls. Application rate limits don't increase with more users; to view your own library with this tool you'll to run it yourself. 
+The spotify API has strict rate limits and finding all the tracks by liked artists can require thousands of calls. Application rate limits don't increase with more users; to view your own library with this tool you'll to have run it yourself. 
 
 # Installation
 
