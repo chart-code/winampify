@@ -16,16 +16,16 @@ function setToken(){
   // window.location.hash = ''
 
   if (hash.code){
-    if (window.__interval) __interval.stop()
-    function updateToken(){
+    if (window.__updateInterval) __updateInterval.stop()
+    function updateToken(isIntervalUpdate){
       console.log('update')
       d3.json(`${dataPath}codes/${hash.code}.json`, (err, res) => {
         window.token = res.access_token
-        addDeviceSelect()
+        if (!isIntervalUpdate) addDeviceSelect()
       })
     }
-    updateToken()
-    window.__interval = d3.interval(updateToken, 1000*60*10)
+    updateToken(false)
+    window.__updateInterval = d3.interval(() => updateToken(true), 1000*60*10)
 
     return
   }
