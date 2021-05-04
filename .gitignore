@@ -5,4 +5,4 @@ bin/credentials.json
 public/tidy.tsv
 bin/album-cache/
 public/codes/
-# yarn-error.log
+yarn-error.log
