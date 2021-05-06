@@ -1,5 +1,5 @@
 while true
 do
   node bin/scrape-songs.js
-  sleep 600
+  sleep 21600
 done
