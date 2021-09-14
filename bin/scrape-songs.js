@@ -18,10 +18,11 @@ var tidyPath = __dirname + '/../public/tidy.tsv'
 init()
 
 async function init(){
-  if (!credentials.code) credentials = await require('./auth')()
+  if (!credentials.code) credentials = await require('./auth')
   sp = new SpotifyWebApi(credentials)
 
   var refreshData = await sp.refreshAccessToken()
+
   var access_token = refreshData.body['access_token']
   sp.setAccessToken(access_token)
   var loginCode = credentials.login_code || credentials.code.split('_')[0]

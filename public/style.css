@@ -168,13 +168,15 @@ select{
   background: #000;
   color: #0f0;
   height: 20px;
-  padding: 10px;
+  padding-left: 3px;
+  padding-right: 3px;
   -webkit-border-radius: 0;
   border: 0;
   outline: 1px solid #333;
   outline-offset: -1px;
   height: 24px;
   max-width: 150px;
+  font-size: 12px;
 }
 
 

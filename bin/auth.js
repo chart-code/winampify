@@ -33,9 +33,14 @@ module.exports = async function(){
 
   // Retrieve an access token and a refresh token
   var data = await spotifyApi.authorizationCodeGrant(code)
-  credentials.access_token = data.body['access_token']
-  credentials.refresh_token = data.body['refresh_token']
+  credentials.accessToken = data.body['access_token']
+  credentials.refreshToken = data.body['refresh_token']
   credentials.code = code
+
+  console.log('The token expires in ' + data.body['expires_in']);
+  console.log('The access token is ' + data.body['access_token']);
+  console.log('The refresh token is ' + data.body['refresh_token']);
+
 
   // TODO save each user to a seperate file?
   io.writeDataSync(credentialsPath, credentials, {indent: 2})
@@ -43,3 +48,4 @@ module.exports = async function(){
   return credentials
 }
 
+module.exports()
