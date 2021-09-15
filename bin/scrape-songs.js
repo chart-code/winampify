@@ -22,17 +22,20 @@ async function init(){
   sp = new SpotifyWebApi(credentials)
 
   var refreshData = await sp.refreshAccessToken()
+  console.log('The token expires in ' + refreshData.body['expires_in']);
 
   var access_token = refreshData.body['access_token']
   sp.setAccessToken(access_token)
+  credentials.access_token = access_token
+
   var loginCode = credentials.login_code || credentials.code.split('_')[0]
-  io.writeDataSync(`${__dirname}/../public/codes/${loginCode}.json`, {access_token})
+  io.writeDataSync(`${__dirname}/../public/codes/${loginCode}.json`, credentials)
 
   console.log(`starting http://localhost:3989/public/#code=${loginCode}`)
 
-  // only update song list every four hours a day
+  // only update song list every four hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  // if (new Date() - tidyUpdated < 1000*60*60*4) return
+  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
 
   try {
     await generateTidy() 

@@ -37,7 +37,7 @@ function setToken(){
 
   var authEndpoint = 'https://accounts.spotify.com/authorize'
 
-  var clientId = '83cc6f3e727747aab0f30bd4a501308f'
+  var clientId = 'fe7aca6e0bb74bbb8229f44693e79131'
   var redirectUri = window.location.href.replace('#', '')
   var scopes = [
     'user-top-read',

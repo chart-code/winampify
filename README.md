@@ -1,6 +1,6 @@
 [roadtolarissa.com/winampify/](https://roadtolarissa.com/winampify/)
 
-Winamp style interface for Spotify. All track
+Winamp, but for Spotify. Every track by every artist you've liked in an information dense interface. 
 
 The Spotify API has strict rate limits and finding all the tracks by liked artists can require thousands of calls. Application rate limits don't increase with more users; to view your own library with this tool you'll to have run it yourself. 
 
