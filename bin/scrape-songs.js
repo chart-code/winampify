@@ -13,9 +13,9 @@ var isCached = {}
 cachedAlbums.forEach(d => isCached[d.replace('.tsv', '')] = true)
 
 var tidyPath = __dirname + '/../public/tidy.tsv'
-processTidy(io.readDataSync(tidyPath.replace('tidy', 'tidy-raw')))
+// processTidy(io.readDataSync(tidyPath.replace('tidy', 'tidy-raw')))
 
-// init()
+init()
 
 async function init(){
   if (!credentials.code) credentials = await require('./auth')
@@ -35,7 +35,7 @@ async function init(){
 
   // only update song list every four hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
+  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
 
   try {
     await generateTidy() 
