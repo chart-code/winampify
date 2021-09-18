@@ -3,7 +3,9 @@ node_modules
 bin/credentials.json
 
 public/tidy.tsv
+public/tidy-raw.tsv
 bin/album-cache/
 public/codes/
 yarn-error.log
 yarn.lock
+

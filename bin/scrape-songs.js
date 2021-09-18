@@ -35,7 +35,7 @@ async function init(){
 
   // only update song list every four hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
+  // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
 
   try {
     await generateTidy() 
@@ -84,6 +84,8 @@ async function generateTidy(){
   } catch (e){
     console.log(e)
   }
+
+  io.writeDataSync(tidyPath.replace('tidy', 'tidy-raw'), tidy)
 
   processTidy(tidy)
 }
