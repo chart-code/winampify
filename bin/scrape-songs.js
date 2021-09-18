@@ -13,9 +13,9 @@ var isCached = {}
 cachedAlbums.forEach(d => isCached[d.replace('.tsv', '')] = true)
 
 var tidyPath = __dirname + '/../public/tidy.tsv'
-// processTidy(io.readDataSync(tidyPath))
+processTidy(io.readDataSync(tidyPath.replace('tidy', 'tidy-raw')))
 
-init()
+// init()
 
 async function init(){
   if (!credentials.code) credentials = await require('./auth')
@@ -92,11 +92,9 @@ async function generateTidy(){
 
 function processTidy(tidy){
   // remove duplicated albums
-  jp.nestBy(tidy, d => d.artistId + d.album).forEach(album => {
-    if (_.uniq(album.map(d => d.albumId)).length == 1) return
-    var bySongName = jp.nestBy(album, d => d.song)
-    if (bySongName.some(d => d.length == 1)) return
-    bySongName.forEach(d => d.slice(1).forEach(d => d.remove = true))
+  jp.nestBy(tidy, d => [d.artistId, d.album.toLowerCase()]).forEach(album => {
+    var byAlbumId = _.sortBy(jp.nestBy(album, d => d.albumId), d => d.length)
+    byAlbumId.slice(1).forEach(id => id.forEach(d => d.remove = true))
   })
   tidy = tidy.filter(d => !d.remove)
 
