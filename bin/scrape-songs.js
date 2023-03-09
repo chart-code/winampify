@@ -35,7 +35,7 @@ async function init(){
 
   // only update song list every four hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping udpate')
+  // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
 
   try {
     await generateTidy() 
@@ -69,10 +69,10 @@ async function generateTidy(){
           albumTidy = io.readDataSync(cachePath)
         } else {
           var songs = (await dlAll(sp.getAlbumTracks, albumId))
-            .map(d => ({song: d.name, songId: d.id}))
-          
-          songs.forEach(({song, songId}) => {
-            albumTidy.push({artist, artistId, album, albumId, date, song, songId})
+            .map(d => ({song: d.name, songId: d.id, songDuration: d.duration_ms}))
+
+          songs.forEach(({song, songId, songDuration}) => {
+            albumTidy.push({artist, artistId, album, albumId, date, song, songId, })
           })
   
           io.writeDataSync(cachePath, albumTidy)
@@ -86,8 +86,30 @@ async function generateTidy(){
   }
 
   io.writeDataSync(tidyPath.replace('tidy', 'tidy-raw'), tidy)
-
   processTidy(tidy)
+
+
+  async function dlAll(fn, id){
+    var pages = []
+    var opts = {offset: 0, limit: 50, country: 'US', include_groups: 'album,single'}
+
+    do{
+      var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
+
+      // Avoid rate limit
+      await sleep(200) 
+
+      pages = pages.concat(lastPage.items)
+      opts.offset += opts.limit
+    } while (lastPage.next && fn != sp.getArtistAlbums) // disable paging on artists albums; bach has too many!
+
+    return pages
+
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
 }
 
 function processTidy(tidy){
@@ -108,29 +130,6 @@ function processTidy(tidy){
   io.writeDataSync(tidyPath, tidy)
 }
 
-async function dlAll(fn, id){
-  var pages = []
-  var opts = {offset: 0, limit: 50, country: 'US', include_groups: 'album,single'}
-
-  do{
-    var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
-
-    // enough to avoid rate limit? this issues suggests 10/s
-    // https://github.com/thelinmichael/spotify-web-api-node/pull/218
-    // could also retry after rate limited 
-    // https://github.com/thelinmichael/spotify-web-api-node/issues/217
-    await sleep(200) 
-
-    pages = pages.concat(lastPage.items)
-    opts.offset += opts.limit
-  } while (lastPage.next && fn != sp.getArtistAlbums) // disable paging on artists albums; bach has too many!
-
-  return pages
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 
 

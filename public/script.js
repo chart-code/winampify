@@ -60,6 +60,8 @@ d3.loadData(dataPath + 'tidy.tsv', (err, res) => {
   }
   filterAll()
 
+  window.initByMonth()
+
   d3.select(window).on('keypress.clear', function(e){
     // TODO clear filters with shortcut
   })
