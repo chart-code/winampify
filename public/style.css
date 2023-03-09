@@ -182,3 +182,57 @@ select{
 
 
 
+
+
+.month-key{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 20px;
+  line-height: 1.4em;
+}
+
+.month{
+  line-height: 1.1em;
+}
+
+.month .album{
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: 130px;
+  vertical-align: top;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+
+  cursor: pointer;
+}
+
+.month .album-title{
+  font-style: italic;
+  opacity: .5;
+}
+
+.month .album:hover{
+  position: relative;
+  z-index: 100;
+  overflow-x: visible !important;
+  text-shadow:  0     1px   0   #000, 
+                1px   0     0   #000, 
+                0     -1px  0   #000, 
+                -1px  0     0   #000;
+}
+.month .album:hover > *{
+  opacity: 1;
+}
+.month .album:hover span{
+  background: rgba(0,0,0,.7);
+}
+.month .album:hover .artist{
+  font-weight: 700;
+}
+
+.info{
+  opacity: .5;
+}
