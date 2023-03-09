@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "npx hot-server & node bin/scrape-songs.js",
-    "pub": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules --exclude public/tidy.tsv --exclude public/tidy-raw.tsv --exclude .git winamp-spotify/ demo@roadtolarissa.com:winamp-spotify/",
+    "pub": "cd .. && rsync -a --omit-dir-times --no-perms --exclude node_modules --exclude bin/album-cache --exclude public/codes --exclude public/tidy.tsv --exclude public/tidy-raw.tsv --exclude .git winamp-spotify/ demo@roadtolarissa.com:winamp-spotify/",
     "dl-cache": "cd .. rsync -a --omit-dir-times --no-perms --exclude node_modules demo@roadtolarissa.com:winamp-spotify/ winamp-spotify/"
   }
 }
