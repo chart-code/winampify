@@ -34,7 +34,7 @@ async function init(){
   console.log(`starting http://localhost:3989/public/#code=${loginCode}`)
 
   // only update song list every four hours
-  var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
+  // var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
   // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
 
   try {
@@ -72,7 +72,7 @@ async function generateTidy(){
             .map(d => ({song: d.name, songId: d.id, songDuration: d.duration_ms}))
 
           songs.forEach(({song, songId, songDuration}) => {
-            albumTidy.push({artist, artistId, album, albumId, date, song, songId, })
+            albumTidy.push({artist, artistId, album, albumId, date, song, songId, songDuration})
           })
   
           io.writeDataSync(cachePath, albumTidy)
@@ -96,7 +96,7 @@ async function generateTidy(){
     do{
       var lastPage = (await fn.apply(sp, id ? [id, opts] : [opts])).body
 
-      // Avoid rate limit
+      // Rate limited
       await sleep(200) 
 
       pages = pages.concat(lastPage.items)
