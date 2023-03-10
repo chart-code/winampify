@@ -4,10 +4,23 @@ window.initByMonth = function(){
   var sel = d3.select('.by-month').html('')
 
   byAlbum.forEach(d => {
-    d.duration = d3.sum(d, e => e.songDuration)
+    var title = d.keyStr.toLowerCase()
+    var hasParenth = title.includes(')')
+
+    d.duration = d3.sum(d, e => e.songDuration)/60/1000
+    d.isRemix = hasParenth && title.includes('remix')
+    d.isReissue = hasParenth && (title.includes('anniversary') || title.includes('issue') || title.includes('edition'))
+    d.isLive = hasParenth && title.includes('live') || title.includes('live from')
+    d.isSoundtrack = hasParenth && (title.includes('original') || title.includes('soundtrack'))
+    d.isShort = d.duration < 20 && d.length < 5
   })
 
-  var byMonthSel = sel.appendMany('div.month', d3.nestBy(byAlbum, d => d.date.slice(0, 7)))
+
+  var selectedAlbums = byAlbum
+    .filter(d => !d.isRemix && !d.isReissue && !d.isLive && !d.isSoundtrack && !d.isShort)
+    // .filter(d => !d.isShort)
+
+  var byMonthSel = sel.appendMany('div.month', d3.nestBy(selectedAlbums, d => (d.date + '-01').slice(0, 7)))
   byMonthSel.append('div.month-key')
     .text(d => d.key)
 
@@ -18,7 +31,7 @@ window.initByMonth = function(){
   byAlbumSel.append('div.info').append('span')
     .text(d => d.length + (d.length > 1 ? ' tracks' : ' track'))
   byAlbumSel.append('div.info').append('span')
-    .text(d => Math.round(d.duration/60/1000) + ' min')
+    .text(d => Math.round(d.duration) + ' min')
 }
 
 if (window.byAlbum) initByMonth()
