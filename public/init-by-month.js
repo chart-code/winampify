@@ -9,7 +9,7 @@ window.initByMonth = function(){
 
     d.duration = d3.sum(d, e => e.songDuration)/60/1000
     d.isRemix = hasParenth && title.includes('remix')
-    d.isReissue = hasParenth && (title.includes('anniversary') || title.includes('issue') || title.includes('edition'))
+    d.isReissue = hasParenth && (title.includes('anniversary') || title.includes('issue') || title.includes('edition') || title.includes('remaster'))
     d.isLive = hasParenth && title.includes('live') || title.includes('live from')
     d.isSoundtrack = hasParenth && (title.includes('original') || title.includes('soundtrack'))
     d.isShort = d.duration < 20 && d.length < 5
