@@ -27,9 +27,20 @@ window.initByMonth = function(){
   // byArtist = _.sortBy(byArtist, d => d.length)
   // byArtist.slice(-60).forEach(d => console.log(d[0].artist, d.length))
 
+  var monthAbv = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec']
+  function fmtDate(str) {
+    var [year, month] = str.split('-')
+    return `${monthAbv[parseInt(month) - 1]} ${year}`
+  }
+
   var byMonthSel = sel.appendMany('div.month', d3.nestBy(selectedAlbums, d => (d.date + '-01').slice(0, 7)))
   byMonthSel.append('div.month-key')
-    .text(d => d.key)
+    // .html(d => {
+    //   var [year, month] = d.key.split('-')
+    //   return `${monthAbv[parseInt(month) - 1]} ${year}`
+    // })
+    .html(d => d.key.replace('-', ' &nbsp;'))
+
 
   var byAlbumSel = byMonthSel.appendMany('div.album', d => _.sortBy(_.sortBy(d, d => -d.duration), d => -d.length))
     .on('click', playSongs)

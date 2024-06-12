@@ -188,12 +188,22 @@ select{
 .month-key{
   margin-top: 30px;
   margin-bottom: 15px;
-  font-size: 20px;
   line-height: 1.4em;
+  position: absolute;
+  left: -50px;
+  top: -30px;
+  opacity: .5;
+  font-size: 10px;
+  line-height: 1.5em;
+  pointer-events: none;
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  height: 50px;
 }
 
 .month{
   line-height: 1.1em;
+  position: relative;
 }
 
 .month .album{
