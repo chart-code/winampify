@@ -33,9 +33,9 @@ async function init(){
 
   console.log(`starting http://localhost:3989/public/#code=${loginCode}`)
 
-  // only update song list every four hours
+  // only update song list every six hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
+  // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
 
   try {
     await generateTidy() 
@@ -48,9 +48,13 @@ async function generateTidy(){
   try {
     var tidy = []
 
+    var savedTracks = await dlAll(sp.getMySavedTracks)
+
     var artists = (await dlAll(sp.getMySavedTracks))
       .map(d => d.track.artists[0])
-      .filter(d => d.id != '5aIqB5nVVvmFsvSdExz408') // dump bach
+      .filter(d => d.id != '5aIqB5nVVvmFsvSdExz408') // bach
+      .filter(d => d.id != '5B7uXBeLc2TkR5Jk23qKIZ') // holst
+      .filter(d => d.id != '3HQyFCFFfJO3KKBlUfZsyW') // randy newman
       .map(d => ({artist: d.name, artistId: d.id}))
 
     var uniqueArtists = jp.nestBy(artists, d => d.artistId).map(d => d[0])
