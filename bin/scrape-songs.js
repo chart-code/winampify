@@ -35,7 +35,7 @@ async function init(){
 
   // only update song list every six hours
   var tidyUpdated = new Date(fs.statSync(tidyPath).mtime)
-  // if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
+  if (new Date() - tidyUpdated < 1000*60*60*6) return console.log('Skipping update')
 
   try {
     await generateTidy() 
